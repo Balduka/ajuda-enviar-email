@@ -1,0 +1,53 @@
+if ($("#rsvp-form").length) {
+        $("#rsvp-form").validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 2
+                },
+                email: "required",
+
+                guest: {
+                    required: true
+                },
+
+                events: {
+                    required: true
+                }
+
+            },
+
+            messages: {
+                name: "Por favor insira seu nome",
+                email: "Por favor insira seu email",
+                guest: "Selecione o número de convidados",
+                events: "Selecione como vai participar"
+            },
+
+            submitHandler: function (form) {
+                $("#loader").css("display", "inline-block");
+                $.ajax({
+                    type: "POST",
+                    url: "mail.php",
+                    data: $(form).serialize(),
+                    success: function () {
+                        $( "#loader").hide();
+                        $( "#success").slideDown( "slow" );
+                        setTimeout(function() {
+                        $( "#success").slideUp( "slow" );
+                        }, 3000);
+                        form.reset();
+                    },
+                    error: function() {
+                        $( "#loader").hide();
+                        $( "#error").slideDown( "slow" );
+                        setTimeout(function() {
+                        $( "#error").slideUp( "slow" );
+                        }, 3000);
+                    }
+                });
+                return false; // required to block normal submit since you used ajax
+            }
+
+        });
+    }
